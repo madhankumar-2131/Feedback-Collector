@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title> 💬 Feedback Collector with Trainer Panel (Protected)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: #f0f4f8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: background-color 0.3s, color 0.3s;
+            color: #222;
+        }
+
+        header {
+            background: #0078d7;
+            color: white;
+            padding: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Dark mode header */
+        body.dark-mode header {
+            background: #004a9f;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin: 30px;
+            justify-content: center;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        main,
+        aside,
+        .login-section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            min-width: 350px;
+            max-width: 500px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Dark mode container backgrounds */
+        body.dark-mode main,
+        body.dark-mode aside,
+        body.dark-mode .login-section {
+            background: #1e1e1e;
+            color: #ddd;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+        }
+
+        h2,
+        h3 {
+            color: #222;
+            margin-top: 0;
+            transition: color 0.3s;
+        }
+
+        .trainer-topic-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.delete-topic-btn {
+    background: #b22222;
+    border: none;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    user-select: none;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.delete-topic-btn:hover {
+    background-color: #7a1212;
+}
+
+
+        body.dark-mode h2,
+        body.dark-mode h3 {
+            color: #eee;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            transition: border-color 0.3s, background-color 0.3s;
+            background: white;
+            color: #222;
+        }
+        .motivation-tips {
+    background: #f0f8ff;
+    border: 2px dashed #5f9ea0;
+    padding: 15px;
+    border-radius: 12px;
+    margin-top: 20px;
+    font-family: 'Segoe UI', sans-serif;
+    color: #181818;
+}
+
+.motivation-tips ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.motivation-tips ul li {
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+
+        body.dark-mode ul {
+            border-color: #555;
+            background: #2a2a2a;
+            color: #ccc;
+        }
+
+        li {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s ease, color 0.3s;
+        }
+
+        li:hover {
+            background-color: #f5faff;
+        }
+
+        /* Dark mode li hover */
+        body.dark-mode li:hover {
+            background-color: #444;
+        }
+
+        li.active {
+            background: #d9edff;
+            font-weight: bold;
+            color: #0078d7;
+        }
+
+        body.dark-mode li.active {
+            background: #004a9f;
+            color: #aaddff;
+        }
+
+        .feedback-count {
+            background: #0078d7;
+            color: white;
+            font-size: 13px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            user-select: none;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+            background: white;
+            color: #222;
+        }
+
+      
+        body.dark-mode input[type="text"],
+        body.dark-mode input[type="password"],
+        body.dark-mode textarea {
+            background: #333;
+            color: #ddd;
+            border-color: #555;
+        }
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: #0078d7;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s ease;
+            user-select: none;
+        }
+
+        button:hover {
+            background-color: #005bb5;
+        }
+
+        .time {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+            transition: color 0.3s;
+        }
+
+        /* Dark mode time */
+        body.dark-mode .time {
+            color: #aaa;
+        }
+
+        #trainerPanel {
+            display: none;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Dark Mode toggle button styles */
+        #darkModeToggle {
+            background-color: #004a9f;
+            padding: 6px 12px;
+            font-size: 14px;
+            border-radius: 6px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.3s ease;
+        }
+
+        #darkModeToggle:hover {
+            background-color: #002f6c;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        💬 Feedback Collector with Trainer Panel (Protected)
+        <button id="darkModeToggle" title="Toggle Dark Mode"> Dark Mode</button>
+    </header>
+
+    <div class="container">
+
+        <main>
+            <h2>User Panel</h2>
+            <p>Select a topic and write your feedback.</p>
+            <ul id="userTopicsList"></ul>
+            <textarea id="userFeedbackInput" placeholder="✍️ Write your feedback..." disabled></textarea>
+            <button id="submitFeedbackBtn" disabled>Submit Feedback</button>
+        </main>
+
+        <!-- Login Section -->
+        <div class="login-section" id="unlockPanelSection">
+            <h2>Trainer Login</h2>
+            <input type="text" id="usernameInput" placeholder="👤 Enter Username" autocomplete="username" />
+            <input type="password" id="passwordInput" placeholder="🔑 Enter Password" autocomplete="current-password" />
+            <button onclick="checkLogin()"> Unlock Trainer Panel</button>
+        </div>
+        
+        <div class="login-section" id="createAccountSection">
+          <h2>Create Trainer Account</h2>
+          <input type="text" id="newUsernameInput" placeholder="👤 Enter new username" autocomplete="username" />
+          <input type="password" id="newPasswordInput" placeholder="🔑 Enter new password" autocomplete="new-password" />
+          <button onclick="createTrainerAccount()">Create Account</button>
+        </div>
+        
+          
+
+
+        <!-- Trainer Panel -->
+        <aside id="trainerPanel">
+            <h2>Trainer Panel</h2>
+            <button id="logoutBtn" style="margin-bottom:15px; background:#b22222;">Logout</button>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="newTopicInput" placeholder="Add new topic">
+                <button id="addTopicBtn" style="width: 28%;
+                padding: 11px;
+                margin-top: 2%">Add</button>
+                <button id="exportCsvBtn" style="margin-top:10px;">Export Feedback as CSV</button>
+
+            </div>
+
+            <h3>Topics</h3>
+            <ul id="trainerTopicsList"></ul>
+
+            <h3>Feedbacks (<span id="trainerFeedbackCount">0</span>)</h3>
+            <ul id="feedbacksList"></ul>
+        </aside>
+    </div>
+
+    <div class="motivation-tips">
+        <h3>🌟 Thank you for your feedback!</h3>
+
+        <p>Here are some tips to keep you motivated and confident 👇</p>
+        <ul>
+            <li>💡 Believe in yourself – You’re capable of amazing things!</li>
+            <li>📘 Learn one new thing every day – Small steps lead to big success.</li>
+            <li>😎 Mistakes help you grow – Keep going!</li>
+            <li>🎯 Stay focused on your goals – You are getting closer every day!</li>
+            <li>💬 Talk positively to yourself – Confidence starts within you.</li>
+            <li>🚀 Take breaks when needed – Recharge to come back stronger.</li>
+            <li>🤝 Surround yourself with positive people – They lift you up.</li>
+            <li>🧠 Keep your mind curious – Always ask questions and explore.</li>
+            <li>📝 Write down your achievements – Celebrate every win!</li>
+            <li>🌱 Growth takes time – Patience is key to success.</li>
+            <li>✨ Stay kind to yourself – You are doing your best, and that’s enough.</li>
+        </ul>
+        <p>💪 Keep learning, keep shining!</p>
+    </div>
+    
+    
+
+    <script>
+       
+            const TRAINERS = {
+                'Madhan': '2131178788',
+                'Gokul': '2131278788',
+                'MadhanGokul': '87888788'
+            };
+
+            const usernameInput = document.getElementById('usernameInput');
+            const passwordInput = document.getElementById('passwordInput');
+
+            function checkLogin() {
+                const username = usernameInput.value.trim();
+                const password = passwordInput.value.trim();
+
+                if (!username || !password) {
+                    alert('Please enter both username and password.');
+                    return;
+                }
+
+                if (TRAINERS[username] && TRAINERS[username] === password) {
+                    alert(`Welcome, ${username}! Trainer panel unlocked.`);
+                    unlockTrainerPanel();
+                    // Clear inputs after successful login
+                    usernameInput.value = '';
+                    passwordInput.value = '';
+                } else {
+                    alert('Invalid username or password!');
+                    passwordInput.value = '';
+                }
+            }
+
+            function unlockTrainerPanel() {
+                trainerPanel.style.display = 'block';
+                unlockPanelSection.style.display = 'none';
+                renderTrainerTopics();
+                renderUserTopics();
+                setUserPanelAccess(false);
+            }
+
+        const addTopicBtn = document.getElementById('addTopicBtn');
+        const newTopicInput = document.getElementById('newTopicInput');
+        const trainerTopicsList = document.getElementById('trainerTopicsList');
+        const feedbacksList = document.getElementById('feedbacksList');
+        const trainerFeedbackCount = document.getElementById('trainerFeedbackCount');
+
+        const userTopicsList = document.getElementById('userTopicsList');
+        const userFeedbackInput = document.getElementById('userFeedbackInput');
+        const submitFeedbackBtn = document.getElementById('submitFeedbackBtn');
+
+      
+
+        const logoutBtn = document.getElementById('logoutBtn');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+
+        let topics = JSON.parse(localStorage.getItem('training_topics') || '[]');
+        let selectedTrainerTopic = null;
+        let selectedUserTopic = null;
+
+        // Load saved dark mode preference
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            darkModeToggle.textContent = 'Light Mode';
+        }
+
+        darkModeToggle.onclick = () => {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                darkModeToggle.textContent = ' ☀️ Light Mode';
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                darkModeToggle.textContent = '🌙 Dark Mode';
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        };
+
+        // Initially user panel disabled because trainer not logged out
+        function setUserPanelAccess(enabled) {
+            userFeedbackInput.disabled = !enabled;
+            submitFeedbackBtn.disabled = !enabled;
+            if (!enabled) {
+                userFeedbackInput.value = '';
+                selectedUserTopic = null;
+                renderUserTopics();
+            }
+        }
+
+        function saveTopics() {
+            localStorage.setItem('training_topics', JSON.stringify(topics));
+        }
+
+        function loadFeedbacks(topic) {
+            return JSON.parse(localStorage.getItem(`feedbacks_${topic}`) || '[]');
+        }
+
+        function saveFeedbacks(topic, feedbacks) {
+            localStorage.setItem(`feedbacks_${topic}`, JSON.stringify(feedbacks));
+        }
+
+       
+
+        function renderUserTopics() {
+            userTopicsList.innerHTML = '';
+            topics.forEach(topic => {
+                const li = document.createElement('li');
+                li.textContent = topic;
+                li.classList.toggle('active', topic === selectedUserTopic);
+                li.onclick = () => {
+                    selectedUserTopic = topic;
+                    renderUserTopics();
+                    userFeedbackInput.disabled = false;
+                    submitFeedbackBtn.disabled = false;
+                    userFeedbackInput.placeholder = `Feedback for "${topic}"...`;
+                };
+                userTopicsList.appendChild(li);
+            });
+
+            if (!selectedUserTopic) {
+                userFeedbackInput.disabled = true;
+                submitFeedbackBtn.disabled = true;
+                userFeedbackInput.value = '';
+            }
+        }
+
+        function renderTrainerFeedbacks(topic) {
+            feedbacksList.innerHTML = '';
+            const feedbacks = loadFeedbacks(topic);
+            trainerFeedbackCount.textContent = feedbacks.length;
+            feedbacks.slice().reverse().forEach(({ text, time }) => {
+                const li = document.createElement('li');
+                li.innerHTML = `<div class="time">${time}</div><div>${text}</div>`;
+                feedbacksList.appendChild(li);
+            });
+        }
+        function renderTrainerTopics() {
+                trainerTopicsList.innerHTML = '';
+                topics.forEach(topic => {
+                    const li = document.createElement('li');
+                    li.className = 'trainer-topic-item';
+
+                    const topicNameSpan = document.createElement('span');
+                    topicNameSpan.textContent = topic;
+
+                    const count = loadFeedbacks(topic).length;
+                    const badge = document.createElement('span');
+                    badge.className = 'feedback-count';
+                    badge.textContent = count;
+
+                    // Delete button
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'delete-topic-btn';
+                    deleteBtn.textContent = 'Delete';
+                    deleteBtn.title = `Delete topic "${topic}"`;
+                    deleteBtn.onclick = (e) => {
+                        e.stopPropagation(); // prevent li click
+                        if (confirm(`Are you sure you want to delete the topic "${topic}" and all its feedback?`)) {
+                            // Remove topic from array
+                            topics = topics.filter(t => t !== topic);
+                            saveTopics();
+                            // Remove related feedback
+                            localStorage.removeItem(`feedbacks_${topic}`);
+
+                            // Reset selected topics if needed
+                            if (selectedTrainerTopic === topic) selectedTrainerTopic = null;
+                            if (selectedUserTopic === topic) selectedUserTopic = null;
+
+                            renderTrainerTopics();
+                            renderUserTopics();
+                            renderTrainerFeedbacks(selectedTrainerTopic);
+                        }
+                    };
+
+                    li.appendChild(topicNameSpan);
+                    li.appendChild(badge);
+                    li.appendChild(deleteBtn);
+
+                    li.classList.toggle('active', topic === selectedTrainerTopic);
+                    li.onclick = () => {
+                        selectedTrainerTopic = topic;
+                        renderTrainerTopics();
+                        renderTrainerFeedbacks(topic);
+                    };
+                    trainerTopicsList.appendChild(li);
+                });
+            }
+
+        addTopicBtn.onclick = () => {
+            const topic = newTopicInput.value.trim();
+            if (!topic) {
+                alert('Enter a topic');
+                return;
+            }
+            if (topics.includes(topic)) {
+                alert('Topic already exists');
+                return;
+            }
+            topics.push(topic);
+            saveTopics();
+            newTopicInput.value = '';
+            renderTrainerTopics();
+            renderUserTopics();
+        };
+
+        submitFeedbackBtn.onclick = () => {
+            const feedback = userFeedbackInput.value.trim();
+            if (!selectedUserTopic) {
+                alert('Please select a topic first');
+                return;
+            }
+            if (!feedback) {
+                alert('Please enter feedback');
+                return;
+            }
+            const feedbacks = loadFeedbacks(selectedUserTopic);
+            const now = new Date();
+            feedbacks.push({ text: feedback, time: now.toLocaleString() });
+            saveFeedbacks(selectedUserTopic, feedbacks);
+            userFeedbackInput.value = '';
+            alert('Feedback submitted successfully!');
+        };
+
+        function checkPassword() {
+            if (passwordInput.value === TRAINER_PASSWORD) {
+                unlockTrainerPanel();
+            } else {
+                alert('Wrong password!');
+            }
+            passwordInput.value = '';
+        }
+
+        function unlockTrainerPanel() {
+            trainerPanel.style.display = 'block';
+            unlockPanelSection.style.display = 'none';
+            renderTrainerTopics();
+            renderUserTopics();
+            // Disable user panel while trainer is logged in
+            setUserPanelAccess(false);
+        }
+
+        logoutBtn.onclick = () => {
+            trainerPanel.style.display = 'none';
+            unlockPanelSection.style.display = 'block';
+            // Enable user panel when trainer logs out
+            setUserPanelAccess(true);
+            selectedUserTopic = null;
+            renderUserTopics();
+            feedbacksList.innerHTML = '';
+            trainerFeedbackCount.textContent = 0;
+            selectedTrainerTopic = null;
+        };
+        
+
+        // On page load, check if trainer logged in state stored (optional)
+        // For simplicity, start locked (user panel disabled)
+        setUserPanelAccess(false);
+
+        const exportCsvBtn = document.getElementById('exportCsvBtn');
+
+            exportCsvBtn.onclick = () => {
+                if (!selectedTrainerTopic) {
+                    alert('Please select a topic to export feedback.');
+                    return;
+                }
+                const feedbacks = loadFeedbacks(selectedTrainerTopic);
+                if (feedbacks.length === 0) {
+                    alert('No feedback available to export for this topic.');
+                    return;
+                }
+
+                let csvContent = 'Time,Feedback\n';
+
+                feedbacks.forEach(({ time, text }) => {
+
+                    const safeText = `"${text.replace(/"/g, '""')}"`;
+                    csvContent += `${time},${safeText}\n`;
+                });
+
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${selectedTrainerTopic}_feedback.csv`;
+                a.click();
+                URL.revokeObjectURL(url);
+            };     
+            function loadTrainers() {
+                    return JSON.parse(localStorage.getItem('trainers') || '{}');
+                }
+
+                function saveTrainers(trainers) {
+                    localStorage.setItem('trainers', JSON.stringify(trainers));
+                }
+                function createTrainerAccount() {
+                        const newUsername = document.getElementById('newUsernameInput').value.trim();
+                        const newPassword = document.getElementById('newPasswordInput').value.trim();
+
+                        if (!newUsername || !newPassword) {
+                            alert('Please enter both username and password.');
+                            return;
+                        }
+
+                        let trainers = loadTrainers();
+
+                        if (trainers[newUsername]) {
+                            alert('Username already exists. Choose another.');
+                            return;
+                        }
+
+                        trainers[newUsername] = newPassword;
+                        saveTrainers(trainers);
+
+                        alert(`Account created for ${newUsername}! You can now log in.`);
+
+                        document.getElementById('newUsernameInput').value = '';
+                        document.getElementById('newPasswordInput').value = '';
+                    }
+
+                    function checkLogin() {
+                            const username = usernameInput.value.trim();
+                            const password = passwordInput.value.trim();
+
+                            if (!username || !password) {
+                                alert('Please enter both username and password.');
+                                return;
+                            }
+
+                            const trainers = loadTrainers();
+
+                            if (trainers[username] && trainers[username] === password) {
+                                alert(`Welcome, ${username}! Trainer panel unlocked.`);
+                                unlockTrainerPanel();
+                                usernameInput.value = '';
+                                passwordInput.value = '';
+                            } else {
+                                alert('Invalid username or password!');
+                                passwordInput.value = '';
+                            }
+                        }
+
+                        
+
+
+    </script>
+
+
+</body>
+
+</html>
